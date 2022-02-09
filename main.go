@@ -17,7 +17,8 @@ func main() {
 	routes.Setup(app)
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "9000" // Default port if not specified
+		port = "3000" // Default port if not specified
 	}
+	fmt.Println("Server started on port", port)
 	app.Listen(port)
 }
