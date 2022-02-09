@@ -15,6 +15,9 @@ func main() {
 		cors.Config{},
 	))
 	routes.Setup(app)
-
-	app.Listen(os.Getenv("PORT"))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9000" // Default port if not specified
+	}
+	app.Listen(port)
 }
