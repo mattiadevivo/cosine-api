@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"fmt"
 	"webapi/routes"
 
 	"github.com/gofiber/fiber/v2"
