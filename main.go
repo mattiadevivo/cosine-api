@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"webapi/routes"
 
 	"github.com/gofiber/fiber/v2"
@@ -15,5 +16,5 @@ func main() {
 	))
 	routes.Setup(app)
 
-	app.Listen(":3000")
+	app.Listen(os.Getenv("PORT"))
 }
