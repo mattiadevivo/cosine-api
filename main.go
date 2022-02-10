@@ -1,8 +1,8 @@
 package main
 
 import (
-	"os"
 	"fmt"
+	"os"
 	"webapi/routes"
 
 	"github.com/gofiber/fiber/v2"
@@ -21,5 +21,8 @@ func main() {
 		port = "3000" // Default port if not specified
 	}
 	fmt.Println("Server started on port", port)
-	app.Listen(port)
+	err := app.Listen(fmt.Sprintf(":%s", port))
+	if err != nil {
+		fmt.Println(err)
+	}
 }
