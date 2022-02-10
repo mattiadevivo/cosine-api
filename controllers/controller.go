@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/base64"
 	"fmt"
-	"os"
 	"path/filepath"
 	"webapi/utils"
 
@@ -11,6 +10,8 @@ import (
 )
 
 const FILENAME string = "features"
+
+var storedFeatures []byte
 
 func getFilePath() string {
 	p, err := filepath.Abs(filepath.Join("files", FILENAME))
@@ -40,30 +41,8 @@ func Store(c *fiber.Ctx) error {
 		return err
 	}
 
-	// Ensure path exists
-	filePath := getFilePath()
-	if _, err := os.Stat(filepath.Dir(filePath)); os.IsNotExist(err) {
-		if err := os.Mkdir(filepath.Dir(filePath), os.ModePerm); err != nil {
-			return err
-		}
+	storedFeatures = dst
 
-	}
-	f, err := os.Create(filePath)
-	if err != nil {
-		fmt.Println("Error while creating " + filePath)
-		fmt.Println(err)
-		return err
-	}
-	// Defer are executed in LIFO order
-	defer f.Close()
-	defer f.Sync()
-
-	_, err = f.Write(dst)
-	if err != nil {
-		fmt.Println("Error while writing to file")
-		fmt.Println(err)
-		return err
-	}
 	return c.JSON(fiber.Map{
 		"message": "success",
 	})
@@ -77,20 +56,16 @@ func Compare(c *fiber.Ctx) error {
 		return err
 	}
 
+	if storedFeatures == nil {
+		return fiber.NewError(500, "First store some features!")
+	}
+
 	received, err := base64.StdEncoding.DecodeString(data["features"])
 	if err != nil {
 		return err
 	}
-	// Ensure path exists
-	filePath := getFilePath()
-	if _, err := os.Stat(filepath.Dir(filePath)); os.IsNotExist(err) {
-		return err
-	}
-	features, err := os.ReadFile(filePath)
-	if err != nil {
-		return err
-	}
-	cosine := utils.Cosine(features, received)
+
+	cosine := utils.Cosine(storedFeatures, received)
 
 	return c.JSON(fiber.Map{
 		"message": "success",
