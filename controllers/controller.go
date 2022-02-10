@@ -21,6 +21,12 @@ func getFilePath() string {
 	return p
 }
 
+func DoNothing(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"message": "success",
+	})
+}
+
 // Take base64 string from "features" inside JSON body, decode it and saves it to a file
 func Store(c *fiber.Ctx) error {
 	var data map[string]string
