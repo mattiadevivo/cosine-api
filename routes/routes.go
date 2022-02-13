@@ -7,7 +7,6 @@ import (
 )
 
 func Setup(app *fiber.App) {
-	app.Post("/api", controllers.DoNothing)
 	app.Post("/api/feature/compare", controllers.Compare)
 	app.Post("/api/feature/store", controllers.Store)
 }
